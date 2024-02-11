@@ -1,7 +1,14 @@
 """
-This is the example module.
 
-This module does stuff.
+This is the main module for the saxe-blue(sky) python little library
+to post basic text and basic text with images (and alt image info) to bsky.app (aka BlueSky, bsky.social).
+
+It uses BlueSky's atproto's XRPC API to make the posts.
+
+This is a basic start of a python library to post to bsky.app.
+
+
+
 """
 import requests
 import json
@@ -65,9 +72,7 @@ def get_DID (handle):
 
 
 def open_session (credentials):  # credentials are handle, did, and app password, and ephemeral API token and more 
-    # print ("credentials\n\n")
-    # print(credentials)
-    
+        
     URL = bskyURLdict.get('Create_Session')
     
     content_info_header = {
@@ -79,8 +84,6 @@ def open_session (credentials):  # credentials are handle, did, and app password
         'password': credentials.get('app_pwd')
     }
 
-    # print ("prepayload")
-    # print (prepayload)
     payload = json.dumps(prepayload)
 
     r = requests.post(URL, headers=content_info_header, data=payload)
@@ -316,10 +319,7 @@ def images_post_create (text2post,credentials,blob_info_array, num_images):
     }
     
     I_post_payload['record'] |= hEmbed
-    print ("hEmbed:\n", hEmbed)
-    print ()
-    print ("I post PaYLOAOD:\n", I_post_payload)
-    
+        
     r = requests.post(URL,headers=I_post_headers, data=json.dumps(I_post_payload))
     
     if r.status_code != 200:
