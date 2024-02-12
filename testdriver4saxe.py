@@ -70,12 +70,15 @@ print ("My blue sky credentials are: \n", bsky_creds)
 now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 now = datetime.now()
 
-bsky_creds['API_create_time'] = now_iso
+bsky_creds['session_token_create_time'] = now_iso
+bsky_creds['refresh_token_create_time'] = now_iso
 
+# Need to revisit this time delta and time formats
 futuredate = datetime.now(timezone.utc) + timedelta(seconds=3)
 futuredate_iso = futuredate.isoformat().replace("+00:00", "Z")
 
-bsky_creds['API_Expiration'] = futuredate_iso
+bsky_creds['session_token_expiration'] = futuredate_iso
+bsky_creds['refresh_token_expiration'] = futuredate_iso
 
 print ("My blue sky credentials now are: \n", bsky_creds)
 

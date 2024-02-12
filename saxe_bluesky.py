@@ -31,8 +31,11 @@ credentials_dict = {
     'app_pwd': 'semi-static_text',
     'session_token': 'ephemeral',
     'refresh_token': 'ephemeral',
-    'API_create_time': 'reserved',
-    'API_Expiration': 'reserved'
+    'session_token_create_time': 'reserved',
+    'refresh_token_create_time': 'reserved',
+    'session_token_expiration': 'reserved',
+    'refresh_token_expiration': 'reserved',
+    
 }
 
 blob_basic_dict = {
