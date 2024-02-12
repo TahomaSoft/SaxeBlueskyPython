@@ -29,7 +29,8 @@ credentials_dict = {
     'handle': 'static_text',
     'DID': 'static_text',
     'app_pwd': 'semi-static_text',
-    'API_token': 'ephemeral',
+    'session_token': 'ephemeral',
+    'refresh_token': 'ephemeral',
     'API_create_time': 'reserved',
     'API_Expiration': 'reserved'
 }
@@ -95,9 +96,13 @@ def open_session (credentials):  # credentials are handle, did, and app password
 
     elif r.status_code == 200:
         temp_i = json.loads (r.text)
-        API_Key = temp_i.get('accessJwt')
-
-    return API_Key
+        session_token = temp_i.get('accessJwt')
+        refresh_token = temp_i.get('refreshJwt')
+        tokens = {
+            'session_token': session_token,
+            'refresh_token': refresh_token
+            }
+    return tokens
 
 def get_author_feed (credentials, feed_length):
     URL = bskyURLdict.get('Get_Author_Feed')

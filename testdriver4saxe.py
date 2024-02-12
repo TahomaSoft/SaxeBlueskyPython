@@ -50,9 +50,11 @@ bsky_creds['DID'] = nicedid
 
 # Establish session, get API_Key (ephemeral)
 
-API_token=open_session(bsky_creds)
+tokens=open_session(bsky_creds)
 
-bsky_creds['API_token'] = API_token
+bsky_creds['session_token'] = token['session_token']
+bsky_creds['refresh_token'] = token['refresh_token']
+
 
 print ("My blue sky credentials are: \n", bsky_creds)
 
