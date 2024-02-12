@@ -48,6 +48,9 @@ blob_basic_dict = {
     'imageAltText': 'TBD'
 }
 
+# For later
+# content_rating_dict = {}
+
 # API expires in 60 to 120 seconds. see https://atproto.com/specs/xrpc
 
 def get_DID (handle):
