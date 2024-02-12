@@ -29,12 +29,21 @@ from PIL import Image
 # Replace example.bsky.social below with your handle, within the ' '
 # Don't use the trailing '@'
 
+
 MyHandle = {'handle':'example.bsky.social'} 
 Actor = MyHandle.get('handle')
 # Provide a real app password here;
 # See https://blueskyfeeds.com/en/faq-app-password as an example
 APP_PASSWORD = "moo-moo-moo-moo" 
 
+# Prompt interactively for handle and app password for testing
+
+Actor = input("Please provide your bsky handle (username): \n ")
+APP_PASSWORD = input("Please provide your application password: \n ")
+
+MyHandle['handle'] = Actor
+
+              
 
 # Use this info to start populating the credentials dictionary
 
@@ -52,8 +61,8 @@ bsky_creds['DID'] = nicedid
 
 tokens=open_session(bsky_creds)
 
-bsky_creds['session_token'] = token['session_token']
-bsky_creds['refresh_token'] = token['refresh_token']
+bsky_creds['session_token'] = tokens['session_token']
+bsky_creds['refresh_token'] = tokens['refresh_token']
 
 
 print ("My blue sky credentials are: \n", bsky_creds)

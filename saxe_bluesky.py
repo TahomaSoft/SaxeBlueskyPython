@@ -122,7 +122,7 @@ def get_author_feed (credentials, feed_length):
         'limit': feed_length
     }
 
-    Session_Token = credentials.get('API_token')
+    Session_Token = credentials.get('session_token')
 
     feed_header = {
     'Authorization': 'Bearer' + ' ' + Session_Token
@@ -167,7 +167,7 @@ def blob_upload (image_filehandle, blob_info, credentials):
     blob_headers = {
         'Content-Type': blob_info['imageMimeType'],
         'Accept': 'application/json',
-        'Authorization': 'Bearer' + ' ' + credentials['API_token']
+        'Authorization': 'Bearer' + ' ' + credentials['session_token']
     }
 
     r = requests.post(URL, headers=blob_headers, data=blob_payload)
@@ -191,7 +191,7 @@ def simple_post_create (text2post,credentials):
     post_headers  = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer' + ' ' + credentials['API_token']
+        'Authorization': 'Bearer' + ' ' + credentials['session_token']
     }
 
     post_payload = {
@@ -245,7 +245,7 @@ def images_post_create (text2post,credentials,blob_info_array, num_images):
     I_post_headers  = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer' + ' ' +  credentials['API_token']
+        'Authorization': 'Bearer' + ' ' +  credentials['session_token']
     }
   
     
