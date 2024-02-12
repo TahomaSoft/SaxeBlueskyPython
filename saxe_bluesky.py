@@ -143,11 +143,11 @@ def get_author_feed (credentials, feed_length):
 def blob_prep (image_filehandle):
 
     img = image_filehandle
-    print('width: ', img.width)
-    print('height:', img.height)
+    # print('width: ', img.width)
+    # print('height:', img.height)
     i = img.format
     image_format = 'image/' + i.lower()
-    print (image_format)
+    # print (image_format)
 
     i_dict = {
         'img_width': img.width,
@@ -282,7 +282,7 @@ def images_post_create (text2post,credentials,blob_info_array, num_images):
                 'size': '_SizeOfBlobVariable'
             }
         }
-        print ("\n blbs is: \n", blbs)
+        # print ("\n blbs is: \n", blbs)
         hImages = [hImage]
         
         
@@ -296,7 +296,7 @@ def images_post_create (text2post,credentials,blob_info_array, num_images):
             hImages[k]['image']['mimeType'] = blbs[k].get('imageMimeType')
             hImages[k]['image']['size'] = blbs[k].get('imagesizebytes')
 
-            print("K is: \t hImages[k] is: \n", k, hImages[k])
+            # print("K is: \t hImages[k] is: \n", k, hImages[k])
                         
             
     else:
