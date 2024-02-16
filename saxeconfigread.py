@@ -23,9 +23,9 @@ with open (stateconfigfile_name, 'r') as stateconfigfile:
     stateconfigfile.close()
 
 statetoml_in['BSKY_INFO']['previous_last_posted_unix'] \
-    = statetoml_in['FEED_1']['last_posted_unix']
+    = statetoml_in['BSKY_INFO']['last_posted_unix']
 statetoml_in['BSKY_INFO']['previous_last_posted_iso'] = \
-     statetoml_in['FEED_1']['last_posted_iso']
+     statetoml_in['BSKY_INFO']['last_posted_iso']
 
 # now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 now_iso = datetime.now(timezone.utc).isoformat()

@@ -2,7 +2,7 @@
 stuff = "yes"
 
 [BSKY_INFO]
-previous_last_posted_unix = 0
-previous_last_posted_iso = 0
-last_posted_unix = 0
-last_posted_iso = 0
+previous_last_posted_unix = 1708112810.7846818
+previous_last_posted_iso = "2024-02-16T19:46:50.784669+00:00"
+last_posted_unix = 1708112828.347675
+last_posted_iso = "2024-02-16T19:47:08.347665+00:00"
