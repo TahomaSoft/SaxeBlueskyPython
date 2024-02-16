@@ -27,7 +27,13 @@ def tuple_time2dt (tupleTime):
      dt = datetime(*s[:6], tzinfo=timezone.utc) # iterated unpacking
      return (dt) # a datetime.datetime object, ISO-ish human readable date/time
 
-def future_time_unix (timeadder):
+def tuple_time2unix (tupleTime):
+     import time
+     import calendar
+     unixtime = calendar.timegm(tupleTime)
+     return unixtime
+
+def future_time_unix (timeadder): # add now as first of 2 params
      now = unix_time_now()
      future = now + timeadder
      return future
