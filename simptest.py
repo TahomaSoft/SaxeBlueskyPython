@@ -27,11 +27,8 @@ y = BasicPost()
 q = ImagePost()
 
 
-print (x.cred)
 
-y.display()
+# print (x.cred)
 
-q.display()
-q.add_images()
-
-q.display()
+t = x.get_cred('')
+print (t)

@@ -53,6 +53,7 @@ bsky_creds['handle'] = MyHandle.get('handle')
 bsky_creds['app_pwd'] = APP_PASSWORD
 
 # Get the DID that goes with my handle
+print (MyHandle)
 
 nicedid = get_DID (MyHandle)
 

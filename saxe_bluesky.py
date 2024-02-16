@@ -27,6 +27,7 @@ bskyURLdict = {
     'Get_Home_Timeline':'https://bsky.social/xrpc/app.bsky.feed.getTimeline'
 }
 
+
 class BskyCredentials:
     def __init__(self):
         self.cred = {
@@ -41,30 +42,49 @@ class BskyCredentials:
             'refresh_token_expiration': 'reserved',
         }
 
-            
+    def get_cred(self,userHandle):
+        self.cred['handle'] = userHandle
+        print (self.cred)
+        print (userHandle)
+        my_DID = get_DID (userHandle)
+        self.cred['DID'] = my_DID
+        return (self.cred)
+
+
 
 class BasicPost:
     def __init__(self):
 
-        self.post_data = {
-            "repo": 'DID_credentials',
-            "collection": "app.bsky.feed.post",
-            # "rkey": "string",
-            "validate": True,
-            "labels": [],
-            "record": {
-                "text" : 'text2post',
-                "createdAt": 'now-time',
-                "$type": 'app.bsky.feed.post',
+        self.post_payload = {
+            'repo': 'DID_credentials',
+            'collection': 'app.bsky.feed.post',
+            # 'rkey': 'string',
+            'validate': True,
+            'labels': [],
+            'record': {
+                'text' : 'text2post',
+                'createdAt': 'now-time',
+                '$type': 'app.bsky.feed.post',
                 'langs': ['en'],
             }
         }
     def display (self):
-            print (json.dumps(self.post_data))
+        print (json.dumps(self.post_payload))
+
+    def add_text (self, text2use):
+        self.post_payload['record']['text'] = text2use
+
+    def post_data (self):
+        return self.post_payload
+
+    def make_post (self):
+        print ("hllo")
+        
+    
 
 class ImagePost (BasicPost):
 
-    self.image_info = {
+    BasicPost.image_info = {
         '$type': 'app.bsky.embed.images', 
         'alt': 'imageAltText',
         'image': {
@@ -77,22 +97,22 @@ class ImagePost (BasicPost):
         }
     }
     
-    self.image_dim = {
+    BasicPost.image_dim = {
         'img_width': 'img.width',
         'img_height': 'img.height',
         'img_format': 'image_format'
     }
      
-    self.Images = [self.image_info]  
+    BasicPost.Images = [BasicPost.image_info]  
     
-    self.Embed =  {
+    BasicPost.Embed =  {
         "embed": {
             "$type": "app.bsky.embed.images",
-            "images": self.Images
+            "images": BasicPost.Images
         }
     }
-    def add_images(self):
-        self.post_data['record'].update(self.Embed)
+    def add_images(BasicPost,num_images):
+        BasicPost.post_payload['record'].update(BasicPost.Embed)
         
             
 credentials_dict = {
