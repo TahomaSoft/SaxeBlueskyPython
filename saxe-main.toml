@@ -1,0 +1,8 @@
+[GENERAL]
+statefile = "saxe-state.config"
+timezone_abbreviation = "UTC"
+
+
+[BSKY_ACCOUNT]
+handle = "pinky"
+app_passwd =  "spit"

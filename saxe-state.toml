@@ -1,0 +1,8 @@
+[GENERAL]
+stuff = "yes"
+
+[BSKY_INFO]
+previous_last_posted_unix = 0
+previous_last_posted_iso = 0
+last_posted_unix = 0
+last_posted_iso = 0
