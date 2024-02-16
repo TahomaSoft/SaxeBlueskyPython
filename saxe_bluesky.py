@@ -22,9 +22,79 @@ bskyURLdict = {
     'Refresh_Session': 'https://bsky.social/xrpc/com.atproto.server.refreshSession',
     'Blob_Up' : 'https://bsky.social/xrpc/com.atproto.repo.uploadBlob',
     'Create_Record' : 'https://bsky.social/xrpc/com.atproto.repo.createRecord',
-    'Get_Author_Feed' : 'https://bsky.social/xrpc/app.bsky.feed.getAuthorFeed'
+    'Get_Author_Feed' : 'https://bsky.social/xrpc/app.bsky.feed.getAuthorFeed',
+    'Get_Actor_Feed': 'https://bsky.social/xrpc/app.bsky.feed.getActorFeeds',
+    'Get_Home_Timeline':'https://bsky.social/xrpc/app.bsky.feed.getTimeline'
 }
 
+class BskyCredentials:
+    def __init__(self):
+        self.cred = {
+            'handle': 'static_text',
+            'DID': 'static_text',
+            'app_pwd': 'semi-static_text',
+            'session_token': 'ephemeral',
+            'refresh_token': 'ephemeral',
+            'session_token_create_time': 'reserved',
+            'refresh_token_create_time': 'reserved',
+            'session_token_expiration': 'reserved',
+            'refresh_token_expiration': 'reserved',
+        }
+
+            
+
+class BasicPost:
+    def __init__(self):
+
+        self.post_data = {
+            "repo": 'DID_credentials',
+            "collection": "app.bsky.feed.post",
+            # "rkey": "string",
+            "validate": True,
+            "labels": [],
+            "record": {
+                "text" : 'text2post',
+                "createdAt": 'now-time',
+                "$type": 'app.bsky.feed.post',
+                'langs': ['en'],
+            }
+        }
+    def display (self):
+            print (json.dumps(self.post_data))
+
+class ImagePost (BasicPost):
+
+    self.image_info = {
+        '$type': 'app.bsky.embed.images', 
+        'alt': 'imageAltText',
+        'image': {
+            '$type': 'blob',
+            'ref': {
+                '$link': 'blobLink'
+            },
+            'mimeType': 'imageMimeType',
+            'size': 'imagesizebytes',
+        }
+    }
+    
+    self.image_dim = {
+        'img_width': 'img.width',
+        'img_height': 'img.height',
+        'img_format': 'image_format'
+    }
+     
+    self.Images = [self.image_info]  
+    
+    self.Embed =  {
+        "embed": {
+            "$type": "app.bsky.embed.images",
+            "images": self.Images
+        }
+    }
+    def add_images(self):
+        self.post_data['record'].update(self.Embed)
+        
+            
 credentials_dict = {
     'handle': 'static_text',
     'DID': 'static_text',
@@ -38,6 +108,7 @@ credentials_dict = {
     
 }
 
+
 blob_basic_dict = {
     'imageMimeType': 'MimeImageTypeString_like_image/jpg',
     'imageFilePath': '/dev/null/foo.jpg',
@@ -47,6 +118,32 @@ blob_basic_dict = {
     'imageWidth':0,
     'imageAltText': 'TBD'
 }
+
+basic_post_dict = {
+    "repo": 'credentials_DID',
+    "collection": "app.bsky.feed.post",
+    # "rkey": "string",
+    "validate": True,
+    "labels": [],
+    "record": {
+        "text" : 'text2post',
+        "createdAt": 'now-time',
+        "$type": 'app.bsky.feed.post',
+        'langs': ['en'],
+    }
+    
+}
+
+
+
+
+
+
+
+# image_post_dict =  #child class
+
+
+
 
 # For later
 # content_rating_dict = {}
@@ -76,6 +173,9 @@ def get_DID (handle):
     return did
 
 # Open a session, get the API Key
+
+def set_post_content_warnings():
+    pass
 
 
 def open_session (credentials):  # credentials are handle, did, and app password, and ephemeral API token and more 
@@ -111,6 +211,7 @@ def open_session (credentials):  # credentials are handle, did, and app password
     return tokens
 
 def get_author_feed (credentials, feed_length):
+    # Get actor's 'author feed'; posts and reposts by the author
     URL = bskyURLdict.get('Get_Author_Feed')
 
     # check feed_length. Between 1 and 100
@@ -122,9 +223,9 @@ def get_author_feed (credentials, feed_length):
     pass
     
     
-    actor = credentials.get('handle')
+    author = credentials.get('handle')
     feed_payload = {
-        'actor': actor,
+        'actor': author,
         'limit': feed_length
     }
 
@@ -145,7 +246,44 @@ def get_author_feed (credentials, feed_length):
         feed = r.text
         return (feed)
 
+def get_actor_feed (credentials, feed_length):
+    # Get actor's feed generator feeds/records
     
+    URL = bskyURLdict.get('Get_Actor_Feed')
+    # check feed_length. Between 1 and 100
+    if feed_length < 1 or feed_length > 100:
+        print ("Feed length requested ", feed_length, "Is too long")
+        print ("Must be between 1 and 100, inclusive")
+        raise Exception ("Feed Length Requested too long")
+
+    pass
+
+    actor = credentials.get('handle')
+    Session_Token = credentials.get('session_token')
+    
+    actor_header = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer' + ' ' + Session_Token
+    }
+   
+    actor_payload = {
+        'actor': actor,
+        'limit': feed_length
+    }
+    
+    r = requests.get(URL, headers=actor_header, params=actor_payload)
+
+    
+    if r.status_code != 200:
+        print ("Status Code", r.status_code)
+        print ("Message", r.text)
+        raise Exception("Status code other than 200 indicates a problem")
+
+    elif r.status_code == 200:
+        feed = r.text
+        return (feed)
+
+        
 def blob_prep (image_filehandle):
 
     img = image_filehandle
@@ -205,13 +343,16 @@ def simple_post_create (text2post,credentials):
         "collection": "app.bsky.feed.post",
         # "rkey": "string",
         "validate": True,
+        "labels": [],
         "record": {
             "text" : text2post,
             "createdAt": now,
-            "$type": 'app.bsky.feed.post'
+            "$type": 'app.bsky.feed.post',
+            'langs': ['en'],
         }
      
     }
+
     r = requests.post(URL,headers=post_headers, data=json.dumps(post_payload))
     if r.status_code != 200:
         print ("Status Code", r.status_code)

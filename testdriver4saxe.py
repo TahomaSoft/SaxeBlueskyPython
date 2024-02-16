@@ -17,6 +17,7 @@ from datetime import date, datetime, time, timezone, timedelta
 from saxe_bluesky import bskyURLdict, get_DID, credentials_dict, open_session 
 from saxe_bluesky import get_author_feed, blob_basic_dict, blob_prep
 from saxe_bluesky import blob_upload, simple_post_create, images_post_create
+from saxe_bluesky import get_actor_feed
 
 from PIL import Image
 
@@ -84,10 +85,16 @@ print ("My blue sky credentials now are: \n", bsky_creds)
 
 # Get my (author) Feed
 # Feed length can be from 1 to 100, inclusive
+"""
+feed_length = 25
+# feed = json.loads (get_author_feed (bsky_creds, feed_length))
+feed = json.loads (get_actor_feed (bsky_creds, feed_length))
 
-feed_length = 3
-feed = json.loads (get_author_feed (bsky_creds, feed_length))
+with open ('./outputfeed.txt', 'w') as feedfile:
+     print (json.dumps(feed), file=feedfile)
+"""
 
+"""
 # Open and check a blob
 IMAGE_PATH = "./testimage.webp"
 image = Image.open(IMAGE_PATH)
@@ -123,16 +130,18 @@ this_blob['imageAltText'] = 'Test Image'
 
 bsky_link = blob_upload(blob_bytes, this_blob, bsky_creds)
 this_blob['blobLink'] = bsky_link
+"""
 
 # print (this_blob)
 
 # Basic Post to my feed
 
 # supply text to post and the bsky_credentials dictionary structure
-simple_post_create ("And Now for more boring tests", bsky_creds)
+simple_post_create ("Testing: And Now for more boring tests", bsky_creds)
+
+exit ()
 
 
-# P
 #images_post_create (text2post, credentials, blob_info_array, num_images)
 
 blobs = [this_blob, this_blob]
@@ -141,5 +150,5 @@ blobs = [this_blob, this_blob]
 images_post_create ("stuff", bsky_creds, blobs, 2)
 
 
-exit ()
+
 
