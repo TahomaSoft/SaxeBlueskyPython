@@ -69,7 +69,8 @@ bsky_creds['refresh_token'] = tokens['refresh_token']
 
 print ("My blue sky credentials are: \n", bsky_creds)
 
-now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+# now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+now_iso = iso_time_now
 now = datetime.now()
 
 bsky_creds['session_token_create_time'] = now_iso

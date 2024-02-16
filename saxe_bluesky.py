@@ -29,7 +29,10 @@ bskyURLdict = {
 
 
 class BskyCredentials:
-    def __init__(self):
+#     def __init__(self):
+    
+       
+    def init_cred (self):
         self.cred = {
             'handle': 'static_text',
             'DID': 'static_text',
@@ -42,14 +45,26 @@ class BskyCredentials:
             'refresh_token_expiration': 'reserved',
         }
 
-    def get_cred(self,userHandle):
-        self.cred['handle'] = userHandle
-        print (self.cred)
+        return self.cred
+    
+    def get_did(cred,userHandle):
+        cred['handle'] = userHandle
+        # print (self.cred)
         print (userHandle)
-        my_DID = get_DID (userHandle)
-        self.cred['DID'] = my_DID
-        return (self.cred)
+        my_DID = fetch_DID (cred)
+        # self.cred['DID'] = my_DID
+        return cred
 
+    def start_session(cred,appPass):
+        
+        cred['app_pwd'] = appPass
+        # print ("internal cred \n", cred)
+        cred = 
+        return cred
+
+    def session_refresh(cred):
+        #stuff
+        return cred
 
 
 class BasicPost:
@@ -170,7 +185,8 @@ basic_post_dict = {
 
 # API expires in 60 to 120 seconds. see https://atproto.com/specs/xrpc
 
-def get_DID (handle):
+def DEPI_get_DID (handle):
+    # Deprecated Version
     handle_header = {
         'Accept': 'application/json'
     }
@@ -191,6 +207,32 @@ def get_DID (handle):
         did = jsondid.get('did')
 
     return did
+
+def fetch_DID (cred_obj):
+    handle_header = {
+        'Accept': 'application/json'
+    }
+    
+    URL = bskyURLdict.get('Get_DID_from_Handle')
+    handle = cred_obj.get('handle')
+
+    payload =  {'handle': handle}
+     
+    r = requests.get(URL, headers=handle_header, params=payload)
+    
+    if r.status_code != 200:
+        print ("Status Code", r.status_code)
+        print ("Message", r.text)
+        raise Exception("Status code other than 200 indicates a problem")
+
+    elif r.status_code == 200:
+        roughdid = r.text
+        jsondid = json.loads(roughdid)
+        did = jsondid.get('did')
+        cred_obj['DID'] = did
+        
+    return cred_obj
+    
 
 # Open a session, get the API Key
 
@@ -228,7 +270,8 @@ def open_session (credentials):  # credentials are handle, did, and app password
             'session_token': session_token,
             'refresh_token': refresh_token
             }
-    return tokens
+        # assign tokens
+    return credentials
 
 def get_author_feed (credentials, feed_length):
     # Get actor's 'author feed'; posts and reposts by the author
