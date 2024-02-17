@@ -10,6 +10,7 @@ This is a basic start of a python library to post to bsky.app.
 
 
 """
+import syslog
 import requests
 import json
 from datetime import date, datetime, time, timezone, timedelta
@@ -199,7 +200,8 @@ def DEPI_get_DID (handle):
     if r.status_code != 200:
         print ("Status Code", r.status_code)
         print ("Message", r.text)
-        raise Exception("Status code other than 200 indicates a problem")
+        syslog.syslog_ERR ('SAXE_BLUESKY: Status code other than 200 indicates a problem')
+        raise Exception('Status code other than 200 indicates a problem')
 
     elif r.status_code == 200:
         roughdid = r.text
