@@ -27,6 +27,17 @@ def tuple_time2dt (tupleTime):
      dt = datetime(*s[:6], tzinfo=timezone.utc) # iterated unpacking
      return (dt) # a datetime.datetime object, ISO-ish human readable date/time
 
+def tuple_time2iso (tupleTime):
+     s = tupleTime
+     dt = tuple_time2dt(s)
+     iso = dt.isoformat()
+     return iso
+
+def dt2iso (dt):
+     q =dt.isoformat()
+     return q
+     
+
 def tuple_time2unix (tupleTime):
      import time
      import calendar
