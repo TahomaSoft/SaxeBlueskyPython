@@ -200,7 +200,7 @@ def DEPI_get_DID (handle):
     if r.status_code != 200:
         print ("Status Code", r.status_code)
         print ("Message", r.text)
-        syslog.syslog (syslog.syslog_ERR,'SAXE_BLUESKY: Status code other than 200 indicates a problem')
+        syslog.syslog (syslog.LOG_ERR,'SAXE_BLUESKY: Status code other than 200 indicates a problem')
         raise Exception('Status code other than 200 indicates a problem')
 
     elif r.status_code == 200:
