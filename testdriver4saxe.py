@@ -14,10 +14,9 @@ this program with the handle (@example.bsky.social)
 import requests
 import json
 from datetime import date, datetime, time, timezone, timedelta
-from saxe_bluesky import bskyURLdict, get_DID, credentials_dict, open_session 
-from saxe_bluesky import get_author_feed, blob_basic_dict, blob_prep
-from saxe_bluesky import blob_upload, simple_post_create, images_post_create
-from saxe_bluesky import get_actor_feed
+from saxe_bluesky import bskyURLdict,BskyCredentials, credentials_dict
+from saxe_bluesky import BskyFeed, BskyBlobs,  BskyPosts
+from saxe_bluesky import OpenSession
 
 from PIL import Image
 
@@ -48,20 +47,26 @@ MyHandle['handle'] = Actor
 
 # Use this info to start populating the credentials dictionary
 
-bsky_creds = credentials_dict
-bsky_creds['handle'] = MyHandle.get('handle')
-bsky_creds['app_pwd'] = APP_PASSWORD
+# bsky_creds = credentials_dict
+#bsky_creds['handle'] = MyHandle.get('handle')
+#bsky_creds['app_pwd'] = APP_PASSWORD
 
 # Get the DID that goes with my handle
-print (MyHandle)
+# print (MyHandle)
 
-nicedid = get_DID (MyHandle)
+# bsky_creds= BskyCredentials.get_did (MyHandle)
+bsky_creds= BskyCredentials()
+bsky_creds.set_handle('atest')
+
+bsky_creds.print()
+
+exit()
 
 bsky_creds['DID'] = nicedid
 
 # Establish session, get API_Key (ephemeral)
 
-tokens=open_session(bsky_creds)
+tokens=OpenSession.open_session(bsky_creds)
 
 bsky_creds['session_token'] = tokens['session_token']
 bsky_creds['refresh_token'] = tokens['refresh_token']
