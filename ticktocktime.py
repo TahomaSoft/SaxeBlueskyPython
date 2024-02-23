@@ -2,6 +2,9 @@ from datetime import  datetime, date, timezone, timedelta
 from time import time, gmtime, strptime, strftime
 
 def bsky_time_now():
+     return iso_zulu_time_now()
+
+def iso_zulu_time_now():
      now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
      return now
 

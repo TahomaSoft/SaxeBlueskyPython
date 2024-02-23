@@ -1,4 +1,4 @@
-# -*- mode: python-mode; python-indent-offset: 4 -*-
+# -*- mode: python; python-indent-offset: 4 -*-
 
 """
 
@@ -18,6 +18,43 @@ import json
 from datetime import date, datetime, time, timezone, timedelta
 from PIL import Image
 
+credentials_dict = {
+    'handle': 'static_text',
+    'DID': 'static_text',
+    'app_pwd': 'semi-static_text',
+    'session_token': 'ephemeral',
+    'refresh_token': 'ephemeral',
+    'session_token_create_time': 'reserved',
+    'refresh_token_create_time': 'reserved',
+    'session_token_expiration': 'reserved',
+    'refresh_token_expiration': 'reserved',
+
+}
+
+blob_basic_dict = {
+    'imageMimeType': 'MimeImageTypeString_like_image/jpg',
+    'imageFilePath': '/dev/null/foo.jpg',
+    'imagesizebytes' : 0,
+    'blobLink': 'TBD',
+    'imageHeight': 0,
+    'imageWidth':0,
+    'imageAltText': 'TBD'
+}
+
+basic_post_dict = {
+    "repo": 'credentials_DID',
+    "collection": "app.bsky.feed.post",
+    # "rkey": "string",
+    "validate": True,
+    "labels": [],
+    "record": {
+        "text" : 'text2post',
+        "createdAt": 'now-time',
+        "$type": 'app.bsky.feed.post',
+        'langs': ['en'],
+    }
+
+}
 
 bskyURLdict = {
     'Get_DID_from_Handle'  : 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle',
@@ -30,45 +67,38 @@ bskyURLdict = {
     'Get_Home_Timeline':'https://bsky.social/xrpc/app.bsky.feed.getTimeline'
 }
 
+class BskyStruct:
+    def __init__(self):
+        self.bpost_dict = basic_post_dict
+        
+    def INIT (self):
+        return self.bpost_dict
 
+    
 class BskyCredentials:
     def __init__(self):
-        self.cred = {
-            'handle': 'static_text',
-            'DID': 'static_text',
-            'app_pwd': 'semi-static_text',
-            'session_token': 'ephemeral',
-            'refresh_token': 'ephemeral',
-            'session_token_create_time': 'reserved',
-            'refresh_token_create_time': 'reserved',
-            'session_token_expiration': 'reserved',
-            'refresh_token_expiration': 'reserved',
-        }
-                  
-    def print(self):
+        self.cred = credentials_dict
+                                
+    def printCred(self):
         print (self.cred)
 
+    def _getHandle(self):
+        return self.cred['handle']
+    
     def set_handle(self, handle):
         self.cred['handle'] = handle
-        print (self.cred.get('handle'))
-        #self.cred.get(handle) = handle
-        
-    def get_did(userHandle):
-        cred = credentials_dict
-        cred['handle'] = userHandle
-        # print (self.cred)
-        print (userHandle)
-        my_DID = fetch_DID (cred)
-        # self.cred['DID'] = my_DID
-        return cred
-    
-    def fetch_DID (cred_obj):
+
+    def set_appPW(self,appPW):
+        self.cred['app_pwd'] = appPW
+                
+    def get_did(self):
+      
         handle_header = {
             'Accept': 'application/json'
         }
-
-        URL = bskyURLdict.get('Get_DID_from_Handle')
-        handle = cred_obj.get('handle')
+        URLset = bskyURLdict
+        URL = URLset.get('Get_DID_from_Handle')
+        handle = self._getHandle()
         
         payload =  {'handle': handle}
         
@@ -83,22 +113,60 @@ class BskyCredentials:
             roughdid = r.text
             jsondid = json.loads(roughdid)
             did = jsondid.get('did')
-            cred_obj['DID'] = did
+            self.cred['DID'] = did
         else:
             print ("we are lost")
             
-        return cred_obj
-        
-        
-    def start_session(cred,appPass):
+        return self.cred['DID']
 
-        cred['app_pwd'] = appPass
-        # print ("internal cred \n", cred)
-        return cred
+    def myDID (self):
+        return self.cred['DID']
+        
+    def start_session(self):
+        
+        URL = bskyURLdict.get('Create_Session')
 
-    def session_refresh(cred):
+        content_info_header = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        prepayload = {
+            'identifier':self.cred['DID'],
+            'password': self.cred['app_pwd']
+        }
+
+        payload = json.dumps(prepayload)
+
+        r = requests.post(URL, headers=content_info_header, data=payload)
+
+        if r.status_code != 200:
+            print ("Status Code", r.status_code)
+            print ("Message", r.text)
+            raise Exception("Status code other than 200 indicates a problem")
+        
+        elif r.status_code == 200:
+            temp_i = json.loads (r.text)
+            session_token = temp_i.get('accessJwt')
+            refresh_token = temp_i.get('refreshJwt')
+            tokens = {
+                'session_token': session_token,
+                'refresh_token': refresh_token
+            }
+
+        self.cred['session_token'] = tokens['session_token']
+        self.cred['refresh_token'] = tokens['refresh_token']
+        
+        return self.cred
+    
+    def show_creds(self):
+        return self.cred
+
+    def get_sessT(self):
+        return self.cred['session_token']
+
+    def session_refresh(self):
         #stuff
-        return cred
+        return 
 
 
 class BasicPost:
@@ -121,13 +189,13 @@ class BasicPost:
     def display (self):
         print (json.dumps(self.post_payload))
             
-        def add_text (self, text2use):
+    def add_text (self, text2use):
             self.post_payload['record']['text'] = text2use
                 
-        def post_data (self):
+    def post_data (self):
             return self.post_payload
                 
-        def make_post (self):
+    def make_post (self):
             print ("hllo")
 
 
@@ -164,44 +232,9 @@ class ImagePost (BasicPost):
         BasicPost.post_payload['record'].update(BasicPost.Embed)
 
 
-credentials_dict = {
-    'handle': 'static_text',
-    'DID': 'static_text',
-    'app_pwd': 'semi-static_text',
-    'session_token': 'ephemeral',
-    'refresh_token': 'ephemeral',
-    'session_token_create_time': 'reserved',
-    'refresh_token_create_time': 'reserved',
-    'session_token_expiration': 'reserved',
-    'refresh_token_expiration': 'reserved',
-
-}
 
 
-blob_basic_dict = {
-    'imageMimeType': 'MimeImageTypeString_like_image/jpg',
-    'imageFilePath': '/dev/null/foo.jpg',
-    'imagesizebytes' : 0,
-    'blobLink': 'TBD',
-    'imageHeight': 0,
-    'imageWidth':0,
-    'imageAltText': 'TBD'
-}
 
-basic_post_dict = {
-    "repo": 'credentials_DID',
-    "collection": "app.bsky.feed.post",
-    # "rkey": "string",
-    "validate": True,
-    "labels": [],
-    "record": {
-        "text" : 'text2post',
-        "createdAt": 'now-time',
-        "$type": 'app.bsky.feed.post',
-        'langs': ['en'],
-    }
-
-}
 
 
 
@@ -277,7 +310,10 @@ class OpenSession:
                 'refresh_token': refresh_token
             }
             # assign tokens
-            return credentials
+        else:
+            print ('We are lost')
+            
+        return credentials
 
 
 class BskyFeed:
@@ -401,6 +437,31 @@ class BskyBlobs:
 
 class BskyPosts:
 
+    def post_simple_ready (BluePost,session_token):
+        URL = bskyURLdict.get ('Create_Record')
+        post_headers  = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer' + ' ' + session_token
+        }
+        post_payload = BluePost.echo()
+        print(post_payload)
+    
+        r = requests.post(URL,headers=post_headers,
+            data=json.dumps(post_payload))
+        if r.status_code != 200:
+            print ("Status Code", r.status_code)
+            print ("Message", r.text)
+            raise Exception("Status code other than 200 indicates a problem")
+        
+        elif r.status_code == 200:
+            return r.status_code    
+        else:
+            print ("we are lost")
+                
+                
+        
+                    
     def simple_post_create (text2post,credentials):
         URL = bskyURLdict.get ('Create_Record')
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
