@@ -42,6 +42,7 @@ blob_basic_dict = {
 }
 
 basic_post_dict = {
+   # 'raw_text': 'text from fediverse post needing more work',
     "repo": 'credentials_DID',
     "collection": "app.bsky.feed.post",
     # "rkey": "string",
@@ -247,30 +248,6 @@ class ImagePost (BasicPost):
 # content_rating_dict = {}
 
 # API expires in 60 to 120 seconds. see https://atproto.com/specs/xrpc
-
-def DEPI_get_DID (handle):
-    # Deprecated Version
-    handle_header = {
-        'Accept': 'application/json'
-    }
-
-    URL = bskyURLdict.get('Get_DID_from_Handle')
-    payload = handle
-
-    r = requests.get(URL, headers=handle_header, params=payload)
-
-    if r.status_code != 200:
-        print ("Status Code", r.status_code)
-        print ("Message", r.text)
-        syslog.syslog (syslog.LOG_ERR,'SAXE_BLUESKY: Status code other than 200 indicates a problem')
-        raise Exception('Status code other than 200 indicates a problem')
-
-    elif r.status_code == 200:
-        roughdid = r.text
-        jsondid = json.loads(roughdid)
-        did = jsondid.get('did')
-
-    return did
 
 
 
