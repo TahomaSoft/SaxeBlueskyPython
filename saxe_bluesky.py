@@ -17,6 +17,7 @@ import requests
 import json
 from datetime import date, datetime, time, timezone, timedelta
 from PIL import Image
+from feedstructs import post_media_item
 
 credentials_dict = {
     'handle': 'static_text',
@@ -42,16 +43,26 @@ blob_basic_dict = {
 }
 
 basic_post_dict = {
-   # 'raw_text': 'text from fediverse post needing more work',
-    "repo": 'credentials_DID',
-    "collection": "app.bsky.feed.post",
-    # "rkey": "string",
-    "validate": True,
-    "labels": [],
-    "record": {
-        "text" : 'text2post',
-        "createdAt": 'now-time',
-        "$type": 'app.bsky.feed.post',
+    'fediPostItems': {
+        'fixed_tags': 'cleaned list of tags',
+        'base_url': 'base location of feed',
+        'content_rating':'adult, not adult, etc',
+        'textReady2Post': 'cleaned up text',
+        'number_of_media': 'integer, 0-4 (hopefully)',
+        'sensitive_post':'sensitive_post boolean',
+        'contentWarn': 'content Warning',
+        'media_detail': post_media_item,
+    },
+    
+    'repo': 'credentials_DID',
+    'collection': 'app.bsky.feed.post',
+    # 'rkey': 'string',
+    'validate': True,
+    'labels': [],
+    'record': {
+        'text' : 'text2post',
+        'createdAt': 'now-time',
+        '$type': 'app.bsky.feed.post',
         'langs': ['en'],
     }
 
@@ -91,7 +102,11 @@ class BskyCredentials:
 
     def set_appPW(self,appPW):
         self.cred['app_pwd'] = appPW
-                
+
+    def echo(self):
+        return self.cred
+    
+      
     def get_did(self):
       
         handle_header = {
@@ -421,8 +436,8 @@ class BskyPosts:
             'Accept': 'application/json',
             'Authorization': 'Bearer' + ' ' + session_token
         }
-        post_payload = BluePost.echo()
-        print(post_payload)
+        post_payload = BluePost
+        # print(post_payload)
     
         r = requests.post(URL,headers=post_headers,
             data=json.dumps(post_payload))
