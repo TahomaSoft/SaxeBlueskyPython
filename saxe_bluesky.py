@@ -3,7 +3,8 @@
 """
 
 This is the main module for the saxe-blue(sky) python little library
-to post basic text and basic text with images (and alt image info) to bsky.app (aka BlueSky, bsky.social).
+to post basic text and basic text with images
+(and alt image info) to bsky.app (aka BlueSky, bsky.social).
 
 It uses BlueSky's atproto's XRPC API to make the posts.
 
@@ -105,6 +106,9 @@ class BskyCredentials:
 
     def echo(self):
         return self.cred
+    
+    def json (self):
+        print (json.dumps(self.cred))
     
       
     def get_did(self):
