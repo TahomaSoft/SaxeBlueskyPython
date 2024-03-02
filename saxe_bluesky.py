@@ -18,7 +18,7 @@ import requests
 import json
 from datetime import date, datetime, time, timezone, timedelta
 from PIL import Image
-from feedstructs import post_media_item
+# From feedstructs import post_media_item
 
 credentials_dict = {
     'handle': 'static_text',
@@ -52,7 +52,7 @@ basic_post_dict = {
         'number_of_media': 'integer, 0-4 (hopefully)',
         'sensitive_post':'sensitive_post boolean',
         'contentWarn': 'content Warning',
-        'media_detail': post_media_item,
+        'media_detail': 'post_media_item',
     },
     
     'repo': 'credentials_DID',
@@ -210,13 +210,13 @@ class BasicPost:
         print (json.dumps(self.post_payload))
             
     def add_text (self, text2use):
-            self.post_payload['record']['text'] = text2use
+        self.post_payload['record']['text'] = text2use
                 
     def post_data (self):
-            return self.post_payload
+        return self.post_payload
                 
     def make_post (self):
-            print ("hllo")
+        print ("hllo")
 
 
 class ImagePost (BasicPost):
@@ -276,7 +276,12 @@ class OpenSession:
         return
 
 
-    def open_session (credentials):  # credentials are handle, did, and app password, and ephemeral API token and more
+    def open_session (credentials):
+        '''
+        credentials are handle, did, and app password,
+        and ephemeral API token and more
+        '''
+        
         URL = bskyURLdict.get('Create_Session')
 
         content_info_header = {
